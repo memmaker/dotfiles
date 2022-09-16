@@ -1,0 +1,65 @@
+## WORK IN PROGRESS
+## Stuff in this file might be used or it might not..
+
+export LC_ALL="en_US.UTF-8"
+
+eval "$(pyenv init -)"
+
+
+serversetup () {
+ RESTARGS="${@:2}"
+ ssh "${1}" "cd ~/ServerTools && ./setup_${2}.sh ${RESTARGS}"
+}
+
+copyserverkeys () {
+ scp "${2}"/id_rsa* "${1}":~/.ssh/
+}
+
+prepareserver() {
+ ssh "${1}" "ssh-keyscan git.32kb.org >> /home/felix/.ssh/known_hosts && sudo apt-get update && sudo apt-get install -yq git && cd ~ && git clone --depth=1 git@git.32kb.org:felix/ServerTools.git && cd ServerTools && ./initial_host_setup.sh ${1}"
+}
+
+resetandprepare() {
+  rm ~/.ssh/known_hosts
+  resetvm "$1"
+  
+  ((count = 60))
+  while [[ $count -ne 0 ]] ; do
+    ping -c 1 "$2" > /dev/null
+    rc=$?
+    if [[ $rc -eq 0 ]] ; then
+        ((count = 1))
+    else
+        sleep 1      
+    fi
+    ((count = count - 1))  
+  done
+
+  if [[ $rc -eq 0 ]] ; then
+    echo "The server is back up.. waiting 5 seconds."
+    sleep 5
+    addmetoserver "$2" && \
+    copyserverkeys "$2" ~/Projects/ServerTools/Config && \
+    prepareserver "$2"
+  else
+    echo "no connection"
+  fi
+}
+
+CRUDE=http://localhost:8080
+
+dir2server() {
+  SOURCEDIR="$1"
+  TARGETDIR="$2"
+
+  cd $SOURCEDIR && tar czvf ../$SOURCEDIR.tgz ./* && cd .. && scp $SOURCEDIR.tgz 32kb.org:/tmp/ && rm $SOURCEDIR.tgz && ssh 32kb.org -C "sudo mkdir -p $TARGETDIR && cd $TARGETDIR && sudo mv /tmp/$SOURCEDIR.tgz . && sudo tar xzvf $SOURCEDIR.tgz && sudo rm $SOURCEDIR.tgz"
+}
+
+
+mermaid() {
+  INPUTFILE=$(realpath "$1");
+  INPUTDIR=$(dirname "$INPUTFILE");
+  FILE=$(basename "$INPUTFILE");
+  echo "$INPUTDIR -> $FILE"
+  podman run --userns=keep-id -it -v "$INPUTDIR":/data minlag/mermaid-cli -i /data/"$FILE"
+}
