@@ -10,6 +10,7 @@ if ! command -v zsh &> /dev/null
 then
     echo "zsh could not be found.. installing"
     sudo apt-get update && sudo apt-get install zsh
+    chsh -s /bin/zsh
 fi
 
 if ! command -v git &> /dev/null || ! command -v gpg &> /dev/null
@@ -45,6 +46,7 @@ fi
 if [ ! -d "${HOME}/.oh-my-zsh" ]; then
   echo "Installing oh-my-zsh"
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  mv "${HOME}/.zshrc.pre-oh-my-zsh" "${HOME}/.zshrc"
 fi
 
 
