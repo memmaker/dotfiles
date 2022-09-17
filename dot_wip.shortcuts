@@ -3,9 +3,6 @@
 
 export LC_ALL="en_US.UTF-8"
 
-eval "$(pyenv init -)"
-
-
 serversetup () {
  RESTARGS="${@:2}"
  ssh "${1}" "cd ~/ServerTools && ./setup_${2}.sh ${RESTARGS}"
