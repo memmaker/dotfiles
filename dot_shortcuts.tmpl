@@ -42,6 +42,8 @@ export MAINSERVER="textzentrisch.de"
 
 alias rsh="ssh $MAINSERVER"
 
+eval "$(pyenv init -)"
+
 ## Hetzner Cloud Server Management
 
 export HCLOUD_TOKEN={{ gopass "HETZNER-CLOUD-API-TOKEN" }}
