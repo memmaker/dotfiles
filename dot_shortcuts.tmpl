@@ -1,0 +1,82 @@
+### GLOBAL SHORTCUTS FOR EVERY MACHINE WITH A ZSHELL
+### Workstation & Server
+
+# GIT Shortcuts
+alias gs="git status"
+
+acp () { git add . && git commit -m "$1" && git push }
+
+# CURL JSON Shortcuts
+postJSON() {
+  URL="$1"
+  BODY="$2"
+  curl -sS -X POST "$URL" \
+   -H 'Content-Type: application/json' \
+   -d "$BODY" | jq
+}
+
+getJSON() {
+  URL="$1"
+  shift
+  declare -a URL_ARGS
+  for arg in "$@"
+  do
+      URL_ARGS+=(--data-urlencode )
+      URL_ARGS+=(${arg} )
+  done
+  curl -sS --get -H 'Content-Type: application/json' "${URL_ARGS[@]}" $URL | jq
+}
+
+# Jump (https://github.com/gsamokovarov/jump)
+eval "$(jump shell)"
+
+### Mac OS X Only / Workstations
+
+{{ if (eq .chezmoi.os "darwin") }}
+
+export MAINSERVER="32kb.org"
+
+alias rsh="ssh $MAINSERVER"
+## Hetzner Cloud Server Management
+
+export HCLOUD_TOKEN=Eyx9FaIuSOw1FagKDFZhuD5Yx6CILEafVRyRIYn035E4pzGhSAEsByd8dgO5YFsG
+
+newvm () {
+  hcloud server create --name $1 --image ubuntu-22.04 --type cx21 --ssh-key felix@ruzzoli.de
+}
+
+delvm () {
+  hcloud server delete $1
+}
+
+resetvm () {
+  hcloud server rebuild --image ubuntu-22.04 $1
+}
+
+# Setup a new user on a server with root access and give him sudo rights
+# Will also setup ssh access for non-root users using keys only
+addmetoserver () {
+  USER=$(whoami)
+  ssh -o "StrictHostKeyChecking=accept-new" root@${1} "groupadd -g 1000 $USER && adduser --uid 1000 --gid 1000 --disabled-password --gecos '' $USER && usermod -a -G sudo $USER && mkdir -p /home/$USER/.ssh/ && echo $(cat ~/.ssh/id_rsa.pub) > /home/$USER/.ssh/authorized_keys && chown -R $USER: /home/$USER/.ssh/; echo '$USER ALL=(ALL:ALL) NOPASSWD: ALL' > /etc/sudoers.d/$USER && sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config && echo 'PasswordAuthentication no' >> /etc/ssh/sshd_config && service ssh restart"
+}
+
+
+rservice() {
+  ssh "$MAINSERVER" -C "sudo service $*"
+}
+
+rng() {
+  ssh -tt "$MAINSERVER" -C "sudo ngman $*"
+}
+
+
+# iTerm 2 Shell Integration
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+# Go Related
+
+# Compile for linux servers
+alias golinux="GOOS=linux GOARCH=amd64 go build"
+
+{{ end }}
+

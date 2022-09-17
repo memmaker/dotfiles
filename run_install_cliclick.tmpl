@@ -1,0 +1,15 @@
+{{ if eq .chezmoi.os "darwin" }}#!/bin/zsh
+
+COMMAND="cliclick"
+DEST="$HOME"/bin/"$COMMAND"
+VERSION="5.1"
+
+if [ ! -f "$DEST" ]; then
+
+unzip -qq -j -d $HOME/bin =( wget -qO- https://github.com/BlueM/cliclick/releases/download/"$VERSION"/cliclick.zip ) cliclick/cliclick
+
+chmod +x "$DEST"
+echo "${COMMAND} has been installed"
+
+fi
+{{ end }}

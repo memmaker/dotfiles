@@ -1,0 +1,25 @@
+#!/bin/bash
+
+NAME="$1"
+shift
+
+if [ -d "release" ]; then
+    echo "warning: release dir exists. Removing all files!"
+    rm -rfi release/*
+else
+    mkdir release
+fi
+
+
+GOOS=linux GOARCH=amd64 go build -o release/"${NAME}_linux_amd64" "$@"
+GOOS=linux GOARCH=arm64 go build -o release/"${NAME}_linux_arm64" "$@"
+GOOS=darwin GOARCH=amd64 go build -o release/"${NAME}_darwin_amd64" "$@"
+GOOS=darwin GOARCH=arm64 go build -o release/"${NAME}_darwin_arm64" "$@"
+GOOS=windows GOARCH=amd64 go build -o release/"${NAME}_windows_amd64.exe" "$@"
+
+cd release || exit
+for FILE in "${NAME}"_*
+do
+    zip "${FILE}.zip" "${FILE}"
+    rm "${FILE}"
+done

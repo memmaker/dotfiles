@@ -1,0 +1,10 @@
+DATADIR="$HOME/mongodata"; 
+mkdir -p $DATADIR && \
+podman run --name mongodb \
+ -e MONGO_INITDB_ROOT_USERNAME='crude' \
+ -e MONGO_INITDB_ROOT_PASSWORD='by_example' \
+ --userns keep-id \
+ -v $DATADIR:/data/db \
+ -p 27017:27017 \
+ -d \
+ mongo

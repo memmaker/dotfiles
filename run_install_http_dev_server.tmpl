@@ -1,0 +1,14 @@
+#!/bin/zsh
+
+COMMAND="http-file-server"
+DEST="$HOME"/bin/"$COMMAND"
+VERSION="1.6.1"
+OS={{ if eq .chezmoi.os "linux" }}"linux"{{ else if eq .chezmoi.os "darwin" }}"osx"{{ end }}
+
+if [ ! -f "$DEST" ]; then
+
+curl -Ls https://github.com/sgreben/http-file-server/releases/download/"$VERSION"/http-file-server_"$VERSION"_"$OS"_x86_64.tar.gz | tar xzO > "$DEST"
+chmod +x "$DEST"
+echo "${COMMAND} has been installed"
+
+fi

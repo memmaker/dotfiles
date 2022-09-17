@@ -1,0 +1,14 @@
+#!/bin/zsh
+
+COMMAND="jump"
+DEST="$HOME"/bin/"$COMMAND"
+VERSION="v0.51.0"
+FILE={{ if eq .chezmoi.os "linux" }}"jump_linux_amd64_binary"{{ else if eq .chezmoi.os "darwin" }}"jump_osx"{{ end }}
+
+if [ ! -f "$DEST" ]; then
+
+curl -Ls https://github.com/gsamokovarov/jump/releases/download/"$VERSION"/"$FILE" > "$DEST"
+chmod +x "$DEST"
+echo "${COMMAND} has been installed"
+
+fi

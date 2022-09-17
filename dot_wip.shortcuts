@@ -63,3 +63,16 @@ mermaid() {
   echo "$INPUTDIR -> $FILE"
   podman run --userns=keep-id -it -v "$INPUTDIR":/data minlag/mermaid-cli -i /data/"$FILE"
 }
+
+ensureCommand() {
+  if [ -f "$HOME"/bin/"$1" ]; then
+    NAME="$1"
+    LINUXNAME=${NAME}_linux64
+    golinux -o "$LINUXNAME"
+    scp "$LINUXNAME" "$MAINSERVER":/tmp/$NAME
+    rm "$LINUXNAME"
+    ssh "$MAINSERVER" -C "sudo mv /tmp/$NAME /usr/local/bin/"
+  else
+    echo "Please supply the command name as argument!"
+  fi
+}
