@@ -8,7 +8,7 @@ OS={{ if eq .chezmoi.os "linux" }}"linux_amd64"{{ else if eq .chezmoi.os "darwin
 if [ ! -f "$DEST" ]; then
 
 {{ if eq .chezmoi.os "linux" }}
-curl -Ls https://github.com/junegunn/fzf/releases/download/"$VERSION"/fzf-"$VERSION"-"$OS".tar.gz | tar xzO - fzf > "$DEST"
+curl -Ls https://github.com/junegunn/fzf/releases/download/"$VERSION"/fzf-"$VERSION"-"$OS".tar.gz | tar xzO fzf > "$DEST"
 {{ else if eq .chezmoi.os "darwin" }}
 unzip -qq -j -d $HOME/bin =( wget -qO- https://github.com/junegunn/fzf/releases/download/"$VERSION"/fzf-"$VERSION"-"$OS".zip ) fzf
 {{ end }}

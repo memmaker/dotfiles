@@ -8,7 +8,7 @@ OS={{ if eq .chezmoi.os "linux" }}"i686-unknown-linux-musl"{{ else if eq .chezmo
 if [ ! -f "$DEST" ]; then
 
 
-curl -Ls https://github.com/sharkdp/bat/releases/download/"$VERSION"/bat-"$VERSION"-"$OS".tar.gz | tar xzO - bat-"$VERSION"-"$OS"/bat > "$DEST"
+curl -Ls https://github.com/sharkdp/bat/releases/download/"$VERSION"/bat-"$VERSION"-"$OS".tar.gz | tar xzO bat-"$VERSION"-"$OS"/bat > "$DEST"
 chmod +x "$DEST"
 echo "${COMMAND} has been installed"
 
