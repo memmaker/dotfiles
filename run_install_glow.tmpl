@@ -1,0 +1,15 @@
+#!/bin/zsh
+
+COMMAND="glow"
+DEST="$HOME"/bin/"$COMMAND"
+VERSION="1.4.1"
+OS={{ if eq .chezmoi.os "linux" }}"linux_x86_64"{{ else if eq .chezmoi.os "darwin" }}"Darwin_x86_64"{{ end }}
+
+if [ ! -f "$DEST" ]; then
+
+
+curl -Ls https://github.com/charmbracelet/glow/releases/download/v"$VERSION"/glow_"$VERSION"_"$OS".tar.gz | tar xzO - glow > "$DEST"
+chmod +x "$DEST"
+echo "${COMMAND} has been installed"
+
+fi

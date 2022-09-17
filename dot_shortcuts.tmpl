@@ -6,6 +6,10 @@ alias gs="git status"
 
 acp () { git add . && git commit -m "$1" && git push }
 
+tldr() {
+  glow https://raw.githubusercontent.com/tldr-pages/tldr/master/pages/common/"$1".md
+}
+
 # CURL JSON Shortcuts
 postJSON() {
   URL="$1"
