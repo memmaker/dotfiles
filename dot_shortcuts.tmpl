@@ -34,9 +34,9 @@ getJSON() {
 # Jump (https://github.com/gsamokovarov/jump)
 eval "$(jump shell)"
 
-### Mac OS X Only / Workstations
-
 {{ if (eq .chezmoi.os "darwin") }}
+
+### Mac OS X Only / Workstations
 
 export MAINSERVER="textzentrisch.de"
 
