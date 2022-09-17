@@ -65,6 +65,8 @@ resetvm () {
 addmetoserver () {
   USER=$(whoami)
   ssh -o "StrictHostKeyChecking=accept-new" root@${1} "groupadd -g 1000 $USER && adduser --uid 1000 --gid 1000 --disabled-password --gecos '' $USER && usermod -a -G sudo $USER && mkdir -p /home/$USER/.ssh/ && echo $(cat ~/.ssh/id_rsa.pub) > /home/$USER/.ssh/authorized_keys && chown -R $USER: /home/$USER/.ssh/; echo '$USER ALL=(ALL:ALL) NOPASSWD: ALL' > /etc/sudoers.d/$USER && sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config && echo 'PasswordAuthentication no' >> /etc/ssh/sshd_config && service ssh restart"
+  scp "${HOME}/.ssh/server_keys" "${1}":~/id_rsa
+  scp "${HOME}/.ssh/server_keys.pub" "${1}":~/id_rsa.pub
 }
 
 
