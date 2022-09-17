@@ -1,9 +1,16 @@
-#!/bin/zsh
+#!/bin/bash
 
 # make sure the basics are available
 # git and gpg
 
 {{ if eq .chezmoi.os "linux" }}
+
+
+if ! command -v zsh &> /dev/null
+then
+    echo "zsh could not be found.. installing"
+    sudo apt-get update && sudo apt-get install zsh
+fi
 
 if ! command -v git &> /dev/null || ! command -v gpg &> /dev/null
 then
