@@ -38,12 +38,13 @@ eval "$(jump shell)"
 
 {{ if (eq .chezmoi.os "darwin") }}
 
-export MAINSERVER="32kb.org"
+export MAINSERVER="textzentrisch.de"
 
 alias rsh="ssh $MAINSERVER"
+
 ## Hetzner Cloud Server Management
 
-export HCLOUD_TOKEN=Eyx9FaIuSOw1FagKDFZhuD5Yx6CILEafVRyRIYn035E4pzGhSAEsByd8dgO5YFsG
+export HCLOUD_TOKEN={{ gopass "HETZNER-CLOUD-API-TOKEN" }}
 
 newvm () {
   hcloud server create --name $1 --image ubuntu-22.04 --type cx21 --ssh-key felix@ruzzoli.de
