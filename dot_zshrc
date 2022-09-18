@@ -108,4 +108,7 @@ export LC_ALL="en_US.UTF-8"
 
 source $HOME/.shortcuts
 source $HOME/.wip.shortcuts
-source $HOME/.auto_source
+
+if [ -f "$HOME/.auto_source" ]; then
+  source $HOME/.auto_source
+fi
