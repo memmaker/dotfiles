@@ -4,13 +4,15 @@
 # GIT Shortcuts
 alias gs="git status"
 
-acp() { git add . && git commit -m "$1" && git push }
+acp() { 
+  git add . && git commit -m "$1" && git push 
+}
 
 tldr() {
   glow https://raw.githubusercontent.com/tldr-pages/tldr/master/pages/common/"$1".md
 }
 
-cht () {
+cht() {
   curl "cheat.sh/$1"
 }
 
@@ -41,9 +43,9 @@ eval "$(jump shell)"
 
 # Get latest release from a GitHub Repo
 get_latest_release() {
-  curl --silent "https://api.github.com/repos/$1/releases/latest" | # Get latest release from GitHub api
-    grep '"tag_name":' |                                            # Get tag line
-    sed -E 's/.*"([^"]+)".*/\1/'                                    # Pluck JSON value
+  curl --silent "https://api.github.com/repos/$1/releases/latest" | \
+  grep '"tag_name":' | \
+  sed -E 's/.*"([^"]+)".*/\1/'                                    
 }
 
 {{ if (eq .chezmoi.os "darwin") }}
@@ -104,4 +106,3 @@ alias release-major="version major && gorelease"
 alias golinux="GOOS=linux GOARCH=amd64 go build"
 
 {{ end }}
-
