@@ -16,6 +16,8 @@ createTGZ() {
 NAME="$1"
 shift
 
+VERSION=$(semver get release)
+
 if [ -d "release" ]; then
     echo "warning: release dir exists. Removing all files!"
     rm -rfi release/*
@@ -23,12 +25,11 @@ else
     mkdir release
 fi
 
-
-GOOS=linux GOARCH=amd64 go build -o release/"${NAME}_linux_amd64" -trimpath -ldflags '-s -w' "$@"
-GOOS=linux GOARCH=arm64 go build -o release/"${NAME}_linux_arm64" -trimpath -ldflags '-s -w' "$@"
-GOOS=darwin GOARCH=amd64 go build -o release/"${NAME}_darwin_amd64" -trimpath -ldflags '-s -w' "$@"
-GOOS=darwin GOARCH=arm64 go build  -o release/"${NAME}_darwin_arm64" -trimpath -ldflags '-s -w' "$@"
-GOOS=windows GOARCH=amd64 go build -o release/"${NAME}_windows_amd64.exe" -trimpath -ldflags '-s -w' "$@"
+GOOS=linux GOARCH=amd64 go build -o release/"${NAME}_${VERSION}_linux_amd64" -trimpath -ldflags '-s -w' "$@"
+GOOS=linux GOARCH=arm64 go build -o release/"${NAME}_${VERSION}_linux_arm64" -trimpath -ldflags '-s -w' "$@"
+GOOS=darwin GOARCH=amd64 go build -o release/"${NAME}_${VERSION}_darwin_amd64" -trimpath -ldflags '-s -w' "$@"
+GOOS=darwin GOARCH=arm64 go build  -o release/"${NAME}_${VERSION}_darwin_arm64" -trimpath -ldflags '-s -w' "$@"
+GOOS=windows GOARCH=amd64 go build -o release/"${NAME}_${VERSION}_windows_amd64.exe" -trimpath -ldflags '-s -w' "$@"
 
 cd release || exit
 for FILE in "${NAME}"_*

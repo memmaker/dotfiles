@@ -1,0 +1,21 @@
+#!/bin/bash
+
+VERSION="v0.0.1"
+
+
+if [ ! -f ".semver.yaml" ]; then
+    echo "Warning: no semantic versioning file found. init with v0.0.1"
+    semver init --release "$VERSION"
+else
+    if [ -z "$1" ]; then
+        echo "Must provide one of: [major, minor, release, rc, beta, alpha]"
+        exit 1
+    fi
+    VERSION=$(semver up "$1")
+    echo "New Version: $VERSION"
+fi
+
+if [ -d .git ] && [ ! $(git tag -l "$VERSION") ]; then
+    echo "git tag for ${VERSION} not found. creating and pushing the new tag."
+    git add . && git commit -m "Release $VERSION" && git tag "$VERSION" && git push --tags
+fi

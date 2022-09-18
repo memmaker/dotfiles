@@ -4,7 +4,7 @@
 # GIT Shortcuts
 alias gs="git status"
 
-acp () { git add . && git commit -m "$1" && git push }
+acp() { git add . && git commit -m "$1" && git push }
 
 tldr() {
   glow https://raw.githubusercontent.com/tldr-pages/tldr/master/pages/common/"$1".md
@@ -33,6 +33,13 @@ getJSON() {
 
 # Jump (https://github.com/gsamokovarov/jump)
 eval "$(jump shell)"
+
+# Get latest release from a GitHub Repo
+get_latest_release() {
+  curl --silent "https://api.github.com/repos/$1/releases/latest" | # Get latest release from GitHub api
+    grep '"tag_name":' |                                            # Get tag line
+    sed -E 's/.*"([^"]+)".*/\1/'                                    # Pluck JSON value
+}
 
 {{ if (eq .chezmoi.os "darwin") }}
 
@@ -64,9 +71,9 @@ resetvm () {
 # Will also setup ssh access for non-root users using keys only
 addmetoserver () {
   USER=$(whoami)
-  ssh -o "StrictHostKeyChecking=accept-new" root@${1} "groupadd -g 1000 $USER && adduser --uid 1000 --gid 1000 --disabled-password --gecos '' $USER && usermod -a -G sudo $USER && mkdir -p /home/$USER/.ssh/ && echo $(cat ~/.ssh/id_rsa.pub) > /home/$USER/.ssh/authorized_keys && chown -R $USER: /home/$USER/.ssh/; echo '$USER ALL=(ALL:ALL) NOPASSWD: ALL' > /etc/sudoers.d/$USER && sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config && echo 'PasswordAuthentication no' >> /etc/ssh/sshd_config && service ssh restart"
-  scp "${HOME}/.ssh/server_keys" "${1}":~/id_rsa
-  scp "${HOME}/.ssh/server_keys.pub" "${1}":~/id_rsa.pub
+  ssh -o "StrictHostKeyChecking=accept-new" root@${1} "groupadd -g 1000 $USER && adduser --uid 1000 --gid 1000 --disabled-password --gecos '' $USER && usermod -a -G sudo $USER && mkdir -p /home/$USER/.ssh/ && echo $(cat ~/.ssh/id_rsa.pub) > /home/$USER/.ssh/authorized_keys && chown -R $USER: /home/$USER/.ssh/; echo '$USER ALL=(ALL:ALL) NOPASSWD: ALL' > /etc/sudoers.d/$USER && echo -e 'PermitRootLogin no\nPasswordAuthentication no' >> /etc/ssh/sshd_config && service ssh restart"
+  scp "${HOME}/.ssh/server_keys" "${1}":/home/"$USER"/.ssh/id_rsa
+  scp "${HOME}/.ssh/server_keys.pub" "${1}":/home/"$USER"/.ssh/id_rsa.pub
 }
 
 
@@ -85,6 +92,10 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 # Go Related
 
 # Compile for linux servers
+alias release="version release && gorelease"
+alias release-minor="version minor && gorelease"
+alias release-major="version major && gorelease"
+
 alias golinux="GOOS=linux GOARCH=amd64 go build"
 
 {{ end }}

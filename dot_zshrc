@@ -5,7 +5,7 @@ export PATH=$HOME/bin:$HOME/go/bin:/usr/local/bin:$PATH
 export FPATH=$FPATH:$HOME/.functions
 
 for FUN in $HOME/.functions/*; do FUNCS="${FUNCS} ${FUN}"; done;
-autoload "$FUNCS"
+autoload $FUNCS
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
