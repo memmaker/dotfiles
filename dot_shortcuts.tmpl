@@ -10,6 +10,11 @@ tldr() {
   glow https://raw.githubusercontent.com/tldr-pages/tldr/master/pages/common/"$1".md
 }
 
+cht () {
+  curl "cheat.sh/$1"
+}
+
+
 # CURL JSON Shortcuts
 postJSON() {
   URL="$1"
