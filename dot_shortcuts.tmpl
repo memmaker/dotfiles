@@ -38,9 +38,6 @@ getJSON() {
   curl -sS --get -H 'Content-Type: application/json' "${URL_ARGS[@]}" $URL | jq
 }
 
-# Jump (https://github.com/gsamokovarov/jump)
-eval "$(jump shell)"
-
 # Get latest release from a GitHub Repo
 get_latest_release() {
   curl --silent "https://api.github.com/repos/$1/releases/latest" | \
