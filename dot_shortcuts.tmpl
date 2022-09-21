@@ -55,6 +55,11 @@ alias rsh="ssh $MAINSERVER"
 
 eval "$(pyenv init -)"
 
+## Intellij
+idea() {
+  open -na "IntelliJ IDEA.app" --args "$@"
+}
+
 ## Hetzner Cloud Server Management
 
 export HCLOUD_TOKEN={{ gopass "HETZNER-CLOUD-API-TOKEN" }}

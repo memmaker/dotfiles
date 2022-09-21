@@ -1,0 +1,45 @@
+#!/bin/zsh
+
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+
+MONGO_DIR="$HOME/mongodata"
+MONGO_USER="crude"
+MONGO_PASS="by_example"
+
+
+# check for supplied arguments
+if [ $# -eq 0 ]; then
+    echo -e "WARNING: Using default username and password.${RED}DON'T DO THIS IN PRODUCTION${NC}"
+elif [ $# -eq 1 ]; then
+    echo -e "WARNING: Using default username and password.${RED}DON'T DO THIS IN PRODUCTION${NC}"
+    MONGO_DIR="$1"
+elif [ $# -eq 2 ]; then
+    echo -e "Using the supplied username and password."
+    MONGO_USER="$1"
+    MONGO_PASS="$2"
+elif [ $# -eq 3 ]; then
+    echo -e "Using the supplied username and password."
+    MONGO_DIR="$1"
+    MONGO_USER="$2"
+    MONGO_PASS="$3"
+else
+    echo "Usage: $0 [data_dir] [username] [password]"
+    echo "Usage: $0 [username] [password]"
+    echo "Usage: $0 [data_dir]"
+    echo "Usage: $0"
+    exit 1
+fi
+# get the absolute path to the data directory
+MONGO_DIR=$(realpath "$MONGO_DIR")
+echo "Starting mongodb with data_dir: $MONGO_DIR"
+
+mkdir -p $DATADIR && \
+podman run \
+--name mongodb \
+-e MONGO_INITDB_ROOT_USERNAME="$MONGO_USER" \
+-e MONGO_INITDB_ROOT_PASSWORD="$MONGO_PASS" \
+--userns keep-id \
+-v "$DATADIR":/data/db \
+-p 27017:27017 \
+-d mongo
