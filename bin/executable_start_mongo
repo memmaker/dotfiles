@@ -10,9 +10,9 @@ MONGO_PASS="by_example"
 
 # check for supplied arguments
 if [ $# -eq 0 ]; then
-    echo -e "WARNING: Using default username and password.${RED}DON'T DO THIS IN PRODUCTION${NC}"
+    echo -e "WARNING: Using default username and password. ${RED}DON'T DO THIS IN PRODUCTION${NC}"
 elif [ $# -eq 1 ]; then
-    echo -e "WARNING: Using default username and password.${RED}DON'T DO THIS IN PRODUCTION${NC}"
+    echo -e "WARNING: Using default username and password. ${RED}DON'T DO THIS IN PRODUCTION${NC}"
     MONGO_DIR="$1"
 elif [ $# -eq 2 ]; then
     echo -e "Using the supplied username and password."
@@ -34,12 +34,12 @@ fi
 MONGO_DIR=$(realpath "$MONGO_DIR")
 echo "Starting mongodb with data_dir: $MONGO_DIR"
 
-mkdir -p $DATADIR && \
+mkdir -p "$MONGO_DIR" && \
 podman run \
 --name mongodb \
 -e MONGO_INITDB_ROOT_USERNAME="$MONGO_USER" \
 -e MONGO_INITDB_ROOT_PASSWORD="$MONGO_PASS" \
 --userns keep-id \
--v "$DATADIR":/data/db \
+-v "$MONGO_DIR":/data/db \
 -p 27017:27017 \
 -d mongo
