@@ -34,6 +34,11 @@ fi
 MONGO_DIR=$(realpath "$MONGO_DIR")
 echo "Starting mongodb with data_dir: $MONGO_DIR"
 
+if podman container exists mongodb; then
+  echo "Removing existing container mongodb"
+  podman rm -f mongodb > /dev/null
+fi
+
 mkdir -p "$MONGO_DIR" && \
 podman run \
 --name mongodb \
