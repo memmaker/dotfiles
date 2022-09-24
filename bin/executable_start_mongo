@@ -1,18 +1,17 @@
 #!/bin/zsh
 
 RED='\033[0;31m'
+GREEN='\033[0;32m'
 NC='\033[0m' # No Color
 
 MONGO_DIR="$HOME/mongodata"
 MONGO_USER="crude"
 MONGO_PASS="by_example"
 
-
-# check for supplied arguments
 if [ $# -eq 0 ]; then
-    echo -e "WARNING: Using default username and password. ${RED}DON'T DO THIS IN PRODUCTION${NC}"
+    echo -e "${RED}WARNING: Using default username and password.\nDON'T DO THIS IN PRODUCTION.${NC}"
 elif [ $# -eq 1 ]; then
-    echo -e "WARNING: Using default username and password. ${RED}DON'T DO THIS IN PRODUCTION${NC}"
+    echo -e "${RED}WARNING: Using default username and password.\nDON'T DO THIS IN PRODUCTION.${NC}"
     MONGO_DIR="$1"
 elif [ $# -eq 2 ]; then
     echo -e "Using the supplied username and password."
@@ -30,7 +29,7 @@ else
     echo "Usage: $0"
     exit 1
 fi
-# get the absolute path to the data directory
+
 MONGO_DIR=$(realpath "$MONGO_DIR")
 echo "Starting mongodb with data_dir: $MONGO_DIR"
 
@@ -39,12 +38,24 @@ if podman container exists mongodb; then
   podman rm -f mongodb > /dev/null
 fi
 
-mkdir -p "$MONGO_DIR" && \
+CONNSTRING="mongodb://${MONGO_USER}:${MONGO_PASS}@localhost:27017/?authSource=admin"
+
+mkdir -p "$MONGO_DIR"
+
+NETWORK="podman"
+
+if podman network exists podnet; then
+  echo "Found 'podnet' network, using it."
+  NETWORK="podnet"
+fi
+
 podman run \
 --name mongodb \
 -e MONGO_INITDB_ROOT_USERNAME="$MONGO_USER" \
 -e MONGO_INITDB_ROOT_PASSWORD="$MONGO_PASS" \
 --userns keep-id \
 -v "$MONGO_DIR":/data/db \
+--network "$NETWORK" \
 -p 27017:27017 \
--d mongo
+-d mongo && \
+echo -e "${GREEN}Service has started:\n${CONNSTRING}${NC}" && exit 0

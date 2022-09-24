@@ -12,6 +12,10 @@ createTGZ() {
     rm "${FILE}"
 }
 
+if [ -z "$1" ]; then
+    echo "Must provide executable name"
+    exit 1
+fi
 
 NAME="$1"
 shift
