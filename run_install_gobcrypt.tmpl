@@ -1,0 +1,14 @@
+#!/bin/zsh
+
+COMMAND="gobcrypt"
+DEST="$HOME"/bin/"$COMMAND"
+VERSION="v1.0.0"
+OS={{ if eq .chezmoi.os "linux" }}"linux_amd64"{{ else if eq .chezmoi.os "darwin" }}"darwin_amd64"{{ end }}
+
+if [ ! -f "$DEST" ]; then
+
+curl -Ls https://github.com/memmaker/gobcrypt/releases/download/"$VERSION"/gobcrypt_"$VERSION"_"$OS".tgz | tar xzO gobcrypt > "$DEST"
+chmod +x "$DEST"
+echo "${COMMAND} has been installed"
+
+fi
