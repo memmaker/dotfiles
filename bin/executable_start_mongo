@@ -40,6 +40,7 @@ fi
 
 CONNSTRING="mongodb://${MONGO_USER}:${MONGO_PASS}@localhost:27017/?authSource=admin"
 
+echo "Ensuring that the data directory exists"
 mkdir -p "$MONGO_DIR"
 
 NETWORK="podman"
@@ -49,6 +50,7 @@ if podman network exists podnet; then
   NETWORK="podnet"
 fi
 
+echo "Starting mongodb container"
 podman run \
 --name mongodb \
 -e MONGO_INITDB_ROOT_USERNAME="$MONGO_USER" \

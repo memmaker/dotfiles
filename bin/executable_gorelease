@@ -21,7 +21,7 @@ NAME="$1"
 shift
 
 VERSION=$(semver get release)
-
+echo "Creating release for version $VERSION"
 if [ -d "release" ]; then
     echo "warning: release dir exists. Removing all files!"
     rm -rfi release/*

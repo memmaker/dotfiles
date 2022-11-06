@@ -1,0 +1,6 @@
+#!/bin/zsh
+
+IMAGEFILE="$1"
+MIMETYPE=$(file -b --mime-type "$IMAGEFILE")
+ENCODED=$(base64 < "$IMAGEFILE")
+echo "data:${MIMETYPE};base64,${ENCODED}"
