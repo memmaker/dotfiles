@@ -38,7 +38,7 @@ if podman container exists mongodb; then
   podman rm -f mongodb > /dev/null
 fi
 
-CONNSTRING="mongodb://${MONGO_USER}:${MONGO_PASS}@localhost:27017/?authSource=admin"
+CONNSTRING="mongodb://${MONGO_USER}:${MONGO_PASS}@mongodb:27017/?authSource=admin"
 
 echo "Ensuring that the data directory exists"
 mkdir -p "$MONGO_DIR"
@@ -58,6 +58,6 @@ podman run \
 --userns keep-id \
 -v "$MONGO_DIR":/data/db \
 --network "$NETWORK" \
--p 27017:27017 \
+--expose "27017" \
 -d mongo && \
 echo -e "${GREEN}Service has started:\n${CONNSTRING}${NC}" && exit 0

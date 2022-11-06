@@ -1,11 +1,7 @@
 #!/bin/zsh
 
-if [ -z "$1" ]; then
-    echo "Must provide image file name"
-    exit 1
-fi
+IMAGEBLOB=$(<&0)
+MIMETYPE=$(echo "$IMAGEBLOB" | file -b --mime-type -)
+ENCODED=$(echo "$IMAGEBLOB" | base64)
 
-IMAGEFILE="$1"
-MIMETYPE=$(file -b --mime-type "$IMAGEFILE")
-ENCODED=$(base64 < "$IMAGEFILE")
 echo "data:${MIMETYPE};base64,${ENCODED}"
