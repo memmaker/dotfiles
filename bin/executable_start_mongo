@@ -55,7 +55,6 @@ podman run \
 --name mongodb \
 -e MONGO_INITDB_ROOT_USERNAME="$MONGO_USER" \
 -e MONGO_INITDB_ROOT_PASSWORD="$MONGO_PASS" \
---authenticationDatabase admin \
 --userns keep-id \
 -v "$MONGO_DIR":/data/db \
 --network "$NETWORK" \
