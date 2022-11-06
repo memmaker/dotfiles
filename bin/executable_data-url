@@ -1,5 +1,10 @@
 #!/bin/zsh
 
+if [ -z "$1" ]; then
+    echo "Must provide image file name"
+    exit 1
+fi
+
 IMAGEFILE="$1"
 MIMETYPE=$(file -b --mime-type "$IMAGEFILE")
 ENCODED=$(base64 < "$IMAGEFILE")
