@@ -58,6 +58,19 @@ get_latest_release() {
   sed -E 's/.*"([^"]+)".*/\1/'                                    
 }
 
+renew_ssl_cert () {
+  podman run \
+   --env DODE_TOKEN=50KDkfIZYWLKjxF8K2Et \
+   -v /ssl:/lego \
+ docker.io/goacme/lego \
+   --accept-tos \
+   --path /lego \
+   --email accounts@32kb.org \
+   --dns dode \
+   --domains "$@" \
+ renew
+}
+
 {{ if (eq .chezmoi.os "darwin") }}
 
 ### Mac OS X Only / Workstations
