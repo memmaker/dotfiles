@@ -59,10 +59,10 @@ get_latest_release() {
 }
 
 renew_ssl_cert () {
-  podman run \
+  docker run \
    --env DODE_TOKEN=50KDkfIZYWLKjxF8K2Et \
    -v /ssl:/lego \
- docker.io/goacme/lego \
+    goacme/lego \
    --accept-tos \
    --path /lego \
    --email accounts@32kb.org \
