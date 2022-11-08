@@ -33,11 +33,6 @@ fi
 MONGO_DIR=$(realpath "$MONGO_DIR")
 echo "Starting mongodb with data_dir: $MONGO_DIR"
 
-if podman container exists mongodb; then
-  echo "Removing existing container mongodb"
-  podman rm -f mongodb > /dev/null
-fi
-
 CONNSTRING="mongodb://${MONGO_USER}:${MONGO_PASS}@mongodb:27017/?authSource=admin"
 
 echo "Ensuring that the data directory exists"
@@ -58,5 +53,7 @@ podman run \
 -v "$MONGO_DIR":/data/db \
 --network "$NETWORK" \
 --expose "27017" \
+--pull=newer \
+--replace \
 -d mongo && \
 echo -e "${GREEN}Service has started:\n${CONNSTRING}${NC}" && exit 0
