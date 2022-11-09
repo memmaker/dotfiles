@@ -58,17 +58,34 @@ get_latest_release() {
   sed -E 's/.*"([^"]+)".*/\1/'                                    
 }
 
+export DODE_TOKEN_PLAIN={{ gopass "DODE-API-TOKEN" }}
+
 renew_ssl_cert () {
   docker run \
-   --env DODE_TOKEN=50KDkfIZYWLKjxF8K2Et \
+   --env DODE_TOKEN="$DODE_TOKEN_PLAIN" \
    -v /ssl:/lego \
     goacme/lego \
    --accept-tos \
    --path /lego \
+   --key-type rsa4096 \
    --email accounts@32kb.org \
    --dns dode \
    --domains "$@" \
  renew
+}
+
+create_ssl_cert () {
+  docker run \
+   --env DODE_TOKEN="$DODE_TOKEN_PLAIN" \
+   -v /ssl:/lego \
+    goacme/lego \
+   --accept-tos \
+   --path /lego \
+   --key-type rsa4096 \
+   --email accounts@32kb.org \
+   --dns dode \
+   --domains "$@" \
+ run
 }
 
 {{ if (eq .chezmoi.os "darwin") }}
