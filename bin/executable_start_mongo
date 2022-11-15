@@ -7,18 +7,19 @@ NC='\033[0m' # No Color
 MONGO_DIR="$HOME/mongodata"
 MONGO_USER="crude"
 MONGO_PASS="by_example"
+MODE="server"
 
 if [ $# -eq 0 ]; then
     echo -e "${RED}WARNING: Using default username and password.\nDON'T DO THIS IN PRODUCTION.${NC}"
 elif [ $# -eq 1 ]; then
     echo -e "${RED}WARNING: Using default username and password.\nDON'T DO THIS IN PRODUCTION.${NC}"
-    MONGO_DIR="$1"
+    MODE="$1"
 elif [ $# -eq 2 ]; then
     echo -e "Using the supplied username and password."
     MONGO_USER="$1"
     MONGO_PASS="$2"
 elif [ $# -eq 3 ]; then
-    echo -e "Using the supplied username and password."
+    echo -e "Using the supplied directory, username and password."
     MONGO_DIR="$1"
     MONGO_USER="$2"
     MONGO_PASS="$3"
@@ -46,14 +47,32 @@ if podman network exists podnet; then
 fi
 
 echo "Starting mongodb container"
-podman run \
---name mongodb \
--e MONGO_INITDB_ROOT_USERNAME="$MONGO_USER" \
--e MONGO_INITDB_ROOT_PASSWORD="$MONGO_PASS" \
--v "$MONGO_DIR":/data/db \
---network "$NETWORK" \
---expose "27017" \
---pull=newer \
---replace \
--d mongo && \
-echo -e "${GREEN}Service has started:\n${CONNSTRING}${NC}" && exit 0
+
+if [ "$MODE"  = 'server' ] ; then
+  podman run \
+  --name mongodb \
+  -e MONGO_INITDB_ROOT_USERNAME="$MONGO_USER" \
+  -e MONGO_INITDB_ROOT_PASSWORD="$MONGO_PASS" \
+  -v "$MONGO_DIR":/data/db \
+  --network "$NETWORK" \
+  --expose "27017" \
+  --pull=newer \
+  --replace \
+  -d mongo && \
+  echo -e "${GREEN}Service has started:\n${CONNSTRING}${NC}"
+else
+  podman run \
+  --name mongodb \
+  -e MONGO_INITDB_ROOT_USERNAME="$MONGO_USER" \
+  -e MONGO_INITDB_ROOT_PASSWORD="$MONGO_PASS" \
+  -v "$MONGO_DIR":/data/db \
+  --network "$NETWORK" \
+  --expose "27017" \
+  --pull=newer \
+  --replace \
+  --publish "27017:27017" \
+  --userns=keep-ids \
+  -d mongo && \
+  echo -e "${GREEN}Service has started:\n${CONNSTRING}${NC}"
+fi
+
