@@ -71,7 +71,7 @@ else
   --pull=newer \
   --replace \
   --publish "27017:27017" \
-  --userns=keep-ids \
+  --userns=keep-id \
   -d mongo && \
   echo -e "${GREEN}Service has started:\n${CONNSTRING}${NC}"
 fi
