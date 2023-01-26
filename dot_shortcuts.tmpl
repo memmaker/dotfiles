@@ -88,15 +88,27 @@ create_ssl_cert () {
  run
 }
 
+alias docker-compose="docker-compose -H unix://run/user/1000/podman/podman.sock"
+
 {{ if (eq .chezmoi.os "darwin") }}
 
 ### Mac OS X Only / Workstations
 
 export MAINSERVER="textzentrisch.de"
 
+
+
 alias rsh="ssh $MAINSERVER"
 
 eval "$(pyenv init -)"
+
+# init go projects
+mkgoproject() {
+  mkdir -p "$1/src"
+  cd "$1/src"
+  go mod init github.com/memmaker/"$1"
+}
+
 
 ## Intellij
 idea() {
